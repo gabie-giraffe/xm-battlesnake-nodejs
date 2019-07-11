@@ -45,7 +45,7 @@ class GameContext {
 
         // Find lowest distance available
         let direction;
-        for (let i = 0; i <= distancesSorted.length; i++) {
+        for (let i = 0; i < distancesSorted.length; i++) {
             if (this.move[distancesSorted[i][0]] != 0) {
                 direction = distancesSorted[i][0];
                 break;
