@@ -120,7 +120,7 @@ class GameContext {
 
     detectSnake(snake, mySnake) {
         let head = mySnake.coords[0];
-        for(let i=1; i<snake.coords.length; i++){
+        for(let i=0; i<snake.coords.length; i++){
             let current = snake.coords[i];
             // left
             if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
