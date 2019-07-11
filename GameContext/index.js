@@ -3,8 +3,6 @@ class GameContext {
     constructor(board) {
         console.log(board)
         this.board = board;
-        this.stateHistory = [];
-        this.moveHistory = [];
     }
 
     nextMove(gameState) {
@@ -20,9 +18,9 @@ class GameContext {
         };
 
         this.gameState = gameState;
-        this.stateHistory.shift(gameState);
 
-        this.detectBorders();
+        this.checkBorders();
+        this.checkSnakes();
         this.findFood()
 
         const options = Object.entries(this.move)
