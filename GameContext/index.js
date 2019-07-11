@@ -1,6 +1,6 @@
 class GameContext {
 
-    constructor (board) {
+    constructor(board) {
         console.log(board)
         this.board = board;
         this.stateHistory = [];
@@ -11,45 +11,43 @@ class GameContext {
 
         // NOTE: Do something here to generate your move
         console.log(gameState)
-        
+
         this.move = {
             up: 1,
             down: 1,
             left: 1,
             right: 1,
         };
-        
+
         this.gameState = gameState;
         this.stateHistory.shift(gameState);
-        return this.findFood()
+        this.findFood()
 
-        //return this.move;
+        const options = Object.entries(this.move)
+            .sort((a, b) => b[1] - a[1]);
+
+        return options[0][0];
     }
 
     findFood() {
-        let move;
         let mySnake = this.getMySnake()
 
         let head = mySnake.coords[0];
 
         if (this.gameState.food[0][0] < head[0]) {
             this.move.left++;
-            return "left"
         }
 
         if (this.gameState.food[0][0] > head[0]) {
             this.move.right++;
-            return "right"
         }
 
         if (this.gameState.food[0][1] < head[1]) {
             this.move.up++;
-            return "up"
         }
 
         if (this.gameState.food[0][1] > head[1]) {
             this.move.down++;
-            return  "down"
         }
     }
 
