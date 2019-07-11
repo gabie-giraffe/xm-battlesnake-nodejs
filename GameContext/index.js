@@ -34,7 +34,8 @@ class GameContext {
     findFood() {
         let mySnake = this.getMySnake()
         let head = mySnake.coords[0];
-
+        this.detectOwnSnake(mySnake);
+        
         if(this.gameState.food.length === 0) {
             return;
         }
@@ -99,6 +100,29 @@ if (!Object.entries) {
          resArray[i] = [ownProps[i], obj[ownProps[i]]];
       return resArray;
    };
+}
+
+detectOwnSnake(mySnake) {
+    let head = mySnake.coords[0];
+    for(let i=1; i<mySnake.coords.length; i++){
+        let current = mySnake.coords[i];
+        // left
+        if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
+            this.move.left = 0;
+        }
+        // right
+        if (current[0] == (head[0] + 1) && (current[1] == head[1])) {
+            this.move.right = 0;
+        }
+        // up
+        if (current[1] == (head[1] - 1) && (current[0] == head[0])) {
+            this.move.up = 0;
+        }
+        // down
+        if (current[1] == (head[1] + 1) && (current[0] == head[0])) {
+            this.move.down = 0;
+        }
+    }
 }
 
 module.exports = GameContext;
