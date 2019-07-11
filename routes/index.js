@@ -1,9 +1,14 @@
 const express = require('express');
-const router = express.Router();
-const GameContext = require('../GameContext')
+const insulter = require('insult');
 
-console.log('>> module initializing')
+const GameContext = require('../GameContext');
+
+const router = express.Router();
+
 var gameContext = null;
+var currentInsult = "";
+var steps = 0
+const INSULT_ROTATION_RATE = 10;
 
 // Handle POST request to '/start'
 router.post('/start', (req, res) => {
@@ -11,10 +16,10 @@ router.post('/start', (req, res) => {
   gameContext = new GameContext(req.body);
   // Response data
   let data = {
-    color: "#DFFF00",
+    color: "#0D27DB",
     name: "Lucky team 13",
     head_url: "http://www.placecage.com/c/200/200", // optional, but encouraged!
-    taunt: "I won't run into walls and i am made of javascript", // optional, but encouraged!
+    taunt: "Lucky snake 13 is lucky", // optional, but encouraged!
   }
 
   return res.json(data)
@@ -22,11 +27,17 @@ router.post('/start', (req, res) => {
 
 // Handle POST request to '/move'
 router.post('/move', (req, res) => {
+  if (steps % INSULT_ROTATION_RATE === 0) {
+    currentInsult = insulter.Insult();
+  }
+
   // Response data
   let data = {
     move: gameContext.nextMove(req.body), // one of: ['up','down','left','right']
-    taunt: 'Outta my way, snake!', // optional, but encouraged!
+    taunt: currentInsult, // optional, but encouraged!
   }
+
+  steps++;
 
   return res.json(data)
 })
