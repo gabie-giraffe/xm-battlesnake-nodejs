@@ -34,17 +34,9 @@ class GameContext {
     }
 
     findFood() {
-<<<<<<< HEAD
         let head = this.mySnake.coords[0];
 
         if (this.gameState.food.length === 0) {
-=======
-        let mySnake = this.getMySnake()
-        let head = mySnake.coords[0];
-        this.detectOwnSnake(mySnake);
-
-        if(this.gameState.food.length === 0) {
->>>>>>> fabafceeea8f0a0519c8d0db5e2390090d88e23b
             return;
         }
 
@@ -54,7 +46,7 @@ class GameContext {
 
         // Find lowest distance available
         let direction;
-        for(let i=0; i<=distancesSorted.length; i++){
+        for (let i = 0; i <= distancesSorted.length; i++) {
             if (this.move[distancesSorted[i][0]] != 0) {
                 direction = distancesSorted[i][0];
                 break;
@@ -110,12 +102,6 @@ class GameContext {
         }
     }
 
-<<<<<<< HEAD
-    detectOwnSnake() {
-        let head = this.mySnake.coords[0];
-        for (let i = 1; i < this.mySnake.coords.length; i++) {
-            let current = this.mySnake.coords[i];
-=======
     getDistances(food, head) {
         this.distances = {
             up: head[1] - food[1],
@@ -125,11 +111,10 @@ class GameContext {
         };
     }
 
-    detectOwnSnake(mySnake) {
-        let head = mySnake.coords[0];
-        for(let i=1; i<mySnake.coords.length; i++){
-            let current = mySnake.coords[i];
->>>>>>> fabafceeea8f0a0519c8d0db5e2390090d88e23b
+    detectOwnSnake() {
+        let head = this.mySnake.coords[0];
+        for (let i = 1; i < this.mySnake.coords.length; i++) {
+            let current = this.mySnake.coords[i];
             // left
             if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
                 this.move.left = 0;
