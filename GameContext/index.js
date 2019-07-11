@@ -20,7 +20,7 @@ class GameContext {
         this.gameState = gameState;
 
         this.checkBorders();
-        this.checkSnakes();
+        //this.checkSnakes();
         this.findFood()
 
         const options = Object.entries(this.move)
@@ -66,9 +66,11 @@ class GameContext {
         return snake;
     }
 
-    detectBorders() {
+    checkBorders() {
         let mySnake = this.getMySnake()
         let head = mySnake.coords[0];
+
+        console.log(`${head}, ${this.board}`);
 
         if (head[0] === 0) {
             this.move.left = 0;
@@ -82,11 +84,33 @@ class GameContext {
             this.move.up = 0;
         }
 
-        if (head[0] === this.board.height - 1) {
+        if (head[1] === this.board.height - 1) {
             this.move.down = 0;
         }
     }
 
+    detectOwnSnake(mySnake) {
+        let head = mySnake.coords[0];
+        for(let i=1; i<mySnake.coords.length; i++){
+            let current = mySnake.coords[i];
+            // left
+            if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
+                this.move.left = 0;
+            }
+            // right
+            if (current[0] == (head[0] + 1) && (current[1] == head[1])) {
+                this.move.right = 0;
+            }
+            // up
+            if (current[1] == (head[1] - 1) && (current[0] == head[0])) {
+                this.move.up = 0;
+            }
+            // down
+            if (current[1] == (head[1] + 1) && (current[0] == head[0])) {
+                this.move.down = 0;
+            }
+        }
+    }
 }
 
 // Polyfill for Object.entries
@@ -100,29 +124,6 @@ if (!Object.entries) {
          resArray[i] = [ownProps[i], obj[ownProps[i]]];
       return resArray;
    };
-}
-
-detectOwnSnake(mySnake) {
-    let head = mySnake.coords[0];
-    for(let i=1; i<mySnake.coords.length; i++){
-        let current = mySnake.coords[i];
-        // left
-        if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
-            this.move.left = 0;
-        }
-        // right
-        if (current[0] == (head[0] + 1) && (current[1] == head[1])) {
-            this.move.right = 0;
-        }
-        // up
-        if (current[1] == (head[1] - 1) && (current[0] == head[0])) {
-            this.move.up = 0;
-        }
-        // down
-        if (current[1] == (head[1] + 1) && (current[0] == head[0])) {
-            this.move.down = 0;
-        }
-    }
 }
 
 module.exports = GameContext;
