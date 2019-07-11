@@ -3,8 +3,6 @@ class GameContext {
     constructor(board) {
         console.log(board)
         this.board = board;
-        this.stateHistory = [];
-        this.moveHistory = [];
     }
 
     nextMove(gameState) {
@@ -20,9 +18,9 @@ class GameContext {
         };
 
         this.gameState = gameState;
-        this.stateHistory.shift(gameState);
 
-        this.detectBorders();
+        this.checkBorders();
+        //this.checkSnakes();
         this.findFood()
 
         const options = Object.entries(this.move)
@@ -45,7 +43,6 @@ class GameContext {
         this.getDistances(this.gameState.food[0], head);
         const distancesSorted = Object.entries(this.distances)
             .sort((a, b) => b[1] - a[1]);
-        console.log(distancesSorted);
 
         // Find lowest distance available
         let direction;
@@ -57,22 +54,18 @@ class GameContext {
         }
 
         if (direction == "left") {
-            console.log(direction);
             this.move.left++;
         }
 
         if (direction == "right") {
-            console.log(direction);
             this.move.right++;
         }
 
         if (direction == "up") {
-            console.log(direction);
             this.move.up++;
         }
 
         if (direction == "down") {
-            console.log(direction);
             this.move.down++;
         }
     }
@@ -86,9 +79,11 @@ class GameContext {
         return snake;
     }
 
-    detectBorders() {
+    checkBorders() {
         let mySnake = this.getMySnake()
         let head = mySnake.coords[0];
+
+        console.log(`${head}, ${this.board}`);
 
         if (head[0] === 0) {
             this.move.left = 0;
@@ -138,7 +133,6 @@ class GameContext {
             }
         }
     }
-
 }
 
 // Polyfill for Object.entries
