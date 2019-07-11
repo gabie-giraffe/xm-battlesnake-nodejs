@@ -37,24 +37,42 @@ class GameContext {
         let mySnake = this.getMySnake()
         let head = mySnake.coords[0];
         this.detectOwnSnake(mySnake);
-        
+
         if(this.gameState.food.length === 0) {
             return;
         }
 
-        if (this.gameState.food[0][0] < head[0] && this.move.left) {
+        this.getDistances(this.gameState.food[0], head);
+        const distancesSorted = Object.entries(this.distances)
+            .sort((a, b) => b[1] - a[1]);
+        console.log(distancesSorted);
+
+        // Find lowest distance available
+        let direction;
+        for(let i=0; i<=distancesSorted.length; i++){
+            if (this.move[distancesSorted[i][0]] != 0) {
+                direction = distancesSorted[i][0];
+                break;
+            }
+        }
+
+        if (direction == "left") {
+            console.log(direction);
             this.move.left++;
         }
 
-        if (this.gameState.food[0][0] > head[0] && this.move.right) {
+        if (direction == "right") {
+            console.log(direction);
             this.move.right++;
         }
 
-        if (this.gameState.food[0][1] < head[1] && this.move.up) {
+        if (direction == "up") {
+            console.log(direction);
             this.move.up++;
         }
 
-        if (this.gameState.food[0][1] > head[1] && this.move.down) {
+        if (direction == "down") {
+            console.log(direction);
             this.move.down++;
         }
     }
@@ -84,8 +102,40 @@ class GameContext {
             this.move.up = 0;
         }
 
-        if (head[0] === this.board.height - 1) {
+        if (head[1] === this.board.height - 1) {
             this.move.down = 0;
+        }
+    }
+
+    getDistances(food, head) {
+        this.distances = {
+            up: head[1] - food[1],
+            down: -(head[1] - food[1]),
+            left: head[0] - food[0],
+            right: -(head[0] - food[0]),
+        };
+    }
+
+    detectOwnSnake(mySnake) {
+        let head = mySnake.coords[0];
+        for(let i=1; i<mySnake.coords.length; i++){
+            let current = mySnake.coords[i];
+            // left
+            if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
+                this.move.left = 0;
+            }
+            // right
+            if (current[0] == (head[0] + 1) && (current[1] == head[1])) {
+                this.move.right = 0;
+            }
+            // up
+            if (current[1] == (head[1] - 1) && (current[0] == head[0])) {
+                this.move.up = 0;
+            }
+            // down
+            if (current[1] == (head[1] + 1) && (current[0] == head[0])) {
+                this.move.down = 0;
+            }
         }
     }
 
@@ -102,29 +152,6 @@ if (!Object.entries) {
          resArray[i] = [ownProps[i], obj[ownProps[i]]];
       return resArray;
    };
-}
-
-detectOwnSnake(mySnake) {
-    let head = mySnake.coords[0];
-    for(let i=1; i<mySnake.coords.length; i++){
-        let current = mySnake.coords[i];
-        // left
-        if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
-            this.move.left = 0;
-        }
-        // right
-        if (current[0] == (head[0] + 1) && (current[1] == head[1])) {
-            this.move.right = 0;
-        }
-        // up
-        if (current[1] == (head[1] - 1) && (current[0] == head[0])) {
-            this.move.up = 0;
-        }
-        // down
-        if (current[1] == (head[1] + 1) && (current[0] == head[0])) {
-            this.move.down = 0;
-        }
-    }
 }
 
 module.exports = GameContext;
