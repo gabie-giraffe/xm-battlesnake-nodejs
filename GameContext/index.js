@@ -21,7 +21,7 @@ class GameContext {
         this.mySnake = this.getMySnake()
 
         this.checkBorders();
-        this.detectOwnSnake();
+        this.detectAllSnakes();
         //this.checkSnakes();
         this.findFood()
 
@@ -35,7 +35,6 @@ class GameContext {
 
     findFood() {
         let head = this.mySnake.coords[0];
-
         if (this.gameState.food.length === 0) {
             return;
         }
@@ -111,10 +110,18 @@ class GameContext {
         };
     }
 
-    detectOwnSnake() {
-        let head = this.mySnake.coords[0];
-        for (let i = 1; i < this.mySnake.coords.length; i++) {
-            let current = this.mySnake.coords[i];
+    detectAllSnakes() {
+        let mySnake = this.getMySnake()
+        for(let i=0; i<this.gameState.snakes.length; i++){
+            let currentSnake = this.gameState.snakes[i];
+            this.detectSnake(currentSnake, mySnake);
+        }
+    }
+
+    detectSnake(snake, mySnake) {
+        let head = mySnake.coords[0];
+        for(let i=1; i<snake.coords.length; i++){
+            let current = snake.coords[i];
             // left
             if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
                 this.move.left = 0;
