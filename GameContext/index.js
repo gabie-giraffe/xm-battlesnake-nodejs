@@ -18,8 +18,10 @@ class GameContext {
         };
 
         this.gameState = gameState;
+        this.mySnake = this.getMySnake()
 
         this.checkBorders();
+        this.detectOwnSnake();
         //this.checkSnakes();
         this.findFood()
 
@@ -32,11 +34,9 @@ class GameContext {
     }
 
     findFood() {
-        let mySnake = this.getMySnake()
-        let head = mySnake.coords[0];
-        this.detectOwnSnake(mySnake);
-        
-        if(this.gameState.food.length === 0) {
+        let head = this.mySnake.coords[0];
+
+        if (this.gameState.food.length === 0) {
             return;
         }
 
@@ -89,10 +89,10 @@ class GameContext {
         }
     }
 
-    detectOwnSnake(mySnake) {
-        let head = mySnake.coords[0];
-        for(let i=1; i<mySnake.coords.length; i++){
-            let current = mySnake.coords[i];
+    detectOwnSnake() {
+        let head = this.mySnake.coords[0];
+        for (let i = 1; i < this.mySnake.coords.length; i++) {
+            let current = this.mySnake.coords[i];
             // left
             if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
                 this.move.left = 0;
@@ -115,15 +115,15 @@ class GameContext {
 
 // Polyfill for Object.entries
 if (!Object.entries) {
-   Object.entries = function( obj ){
-      var ownProps = Object.keys( obj ),
-         i = ownProps.length,
-         resArray = new Array(i); // preallocate the Array
+    Object.entries = function (obj) {
+        var ownProps = Object.keys(obj),
+            i = ownProps.length,
+            resArray = new Array(i); // preallocate the Array
 
-      while (i--)
-         resArray[i] = [ownProps[i], obj[ownProps[i]]];
-      return resArray;
-   };
+        while (i--)
+            resArray[i] = [ownProps[i], obj[ownProps[i]]];
+        return resArray;
+    };
 }
 
 module.exports = GameContext;
