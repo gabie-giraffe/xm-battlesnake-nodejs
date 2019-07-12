@@ -16,10 +16,13 @@ router.post('/start', (req, res) => {
   gameContext = new GameContext(req.body);
   // Response data
   let data = {
-    color: "#0D27DB",
+    color: "#4e47b2",
     name: "Lucky team 13",
-    head_url: "http://www.placecage.com/c/200/200", // optional, but encouraged!
-    taunt: "Lucky snake 13 is lucky", // optional, but encouraged!
+    head_url: "https://pixabay.com/get/57e2dc464853a414ea9d857ec72a357e143cc3e45657734071277cd193/circle-icons-1295218.svg", // optional, but encouraged!
+    head_type: "fang",
+    tail_type: "small-rattle",
+    taunt: "🐍 13 🐍", // optional, but encouraged!
+    secondary_color: "#e8416f",
   }
 
   return res.json(data)

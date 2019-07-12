@@ -6,7 +6,6 @@ class GameContext {
     }
 
     nextMove(gameState) {
-
         // NOTE: Do something here to generate your move
         console.log(gameState)
 
@@ -20,9 +19,8 @@ class GameContext {
         this.gameState = gameState;
         this.mySnake = this.getMySnake()
 
-        this.checkBorders();
-        this.detectOwnSnake();
-        //this.checkSnakes();
+        this.updateBoardMatrix();
+        this.checkColisions();
         this.findFood()
 
         const options = Object.entries(this.move)
@@ -34,14 +32,12 @@ class GameContext {
     }
 
     findFood() {
-        let head = this.mySnake.coords[0];
-
         if (this.gameState.food.length === 0) {
             return;
         }
 
-        this.getDistances(this.gameState.food[0], head);
-        const distancesSorted = Object.entries(this.distances)
+        const distance = this.getDistances(this.gameState.food[0]);
+        const distancesSorted = Object.entries(distance)
             .sort((a, b) => b[1] - a[1]);
 
         // Find lowest distance available
@@ -79,31 +75,51 @@ class GameContext {
         return snake;
     }
 
-    checkBorders() {
+    myHead() {
         let mySnake = this.getMySnake()
-        let head = mySnake.coords[0];
-
-        console.log(`${head}, ${this.board}`);
-
-        if (head[0] === 0) {
-            this.move.left = 0;
-        }
-
-        if (head[0] === this.board.width - 1) {
-            this.move.right = 0;
-        }
-
-        if (head[1] === 0) {
-            this.move.up = 0;
-        }
-
-        if (head[1] === this.board.height - 1) {
-            this.move.down = 0;
-        }
+        return mySnake.coords[0];
     }
 
-    getDistances(food, head) {
-        this.distances = {
+    isOnLeftBorder() {
+        return this.myHead()[0] === 0
+    }
+
+    isOnRightBorder() {
+        return this.myHead()[0] === this.board.width - 1
+    }
+
+    isOnTopBorder() {
+        return this.myHead()[1] === 0
+    }
+
+    isOnBottomBorder() {
+        return this.myHead()[1] === this.board.height - 1
+    }
+
+    checkColisions() {
+        let head = this.myHead()
+
+        this.move.up = this.isOnTopBorder()
+            ? 0
+            : this.boardMatrix[head[1] - 1][head[0]];
+
+        this.move.down = this.isOnBottomBorder()
+            ? 0
+            : this.boardMatrix[head[1] + 1][head[0]];
+
+        this.move.left = this.isOnLeftBorder()
+            ? 0
+            : this.boardMatrix[head[1]][head[0] - 1];
+
+        this.move.right = this.isOnRightBorder()
+            ? 0
+            : this.boardMatrix[head[1]][head[0] + 1];
+    }
+
+    getDistances(food) {
+        const head = this.myHead();
+
+        return {
             up: head[1] - food[1],
             down: -(head[1] - food[1]),
             left: head[0] - food[0],
@@ -111,27 +127,23 @@ class GameContext {
         };
     }
 
-    detectOwnSnake() {
-        let head = this.mySnake.coords[0];
-        for (let i = 1; i < this.mySnake.coords.length; i++) {
-            let current = this.mySnake.coords[i];
-            // left
-            if (current[0] == (head[0] - 1) && (current[1] == head[1])) {
-                this.move.left = 0;
-            }
-            // right
-            if (current[0] == (head[0] + 1) && (current[1] == head[1])) {
-                this.move.right = 0;
-            }
-            // up
-            if (current[1] == (head[1] - 1) && (current[0] == head[0])) {
-                this.move.up = 0;
-            }
-            // down
-            if (current[1] == (head[1] + 1) && (current[0] == head[0])) {
-                this.move.down = 0;
-            }
+    updateBoardMatrix() {
+        this.boardMatrix = []; // y, x
+        for (let y = 0; y < this.board.height; y++) {
+            this.boardMatrix.push(new Array(this.board.width).fill(1))
         }
+
+        this.gameState.snakes.forEach(snake => {
+            snake.coords.forEach(c => this.boardMatrix[c[1]][c[0]] = 0)
+        })
+
+        this.gameState.food.forEach(f => this.boardMatrix[f[1]][f[0]] > 0
+            ? this.boardMatrix[f[1]][f[0]]++
+            : 0
+        );
+
+        console.log('makeObstacleMatrix');
+        this.boardMatrix.forEach(row => console.log(row));
     }
 }
 

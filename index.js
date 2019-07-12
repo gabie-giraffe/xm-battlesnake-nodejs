@@ -19,8 +19,7 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(routes)
 
-app.use('*',function (req, res, next) {
-  console.log('here');
+app.use('*', (req, res, next) => {
   if (req.url === '/favicon.ico') {
     
     // Short-circuit favicon requests
@@ -29,7 +28,6 @@ app.use('*',function (req, res, next) {
     res.end()
     next()
   } else {
-    console.log('there');
     // Reroute all 404 routes to the 404 handler
     var err = new Error()
     err.status = 404
